@@ -1,4 +1,7 @@
-# shiva
+
+# shiva 
+![shiva](https://github.com/user-attachments/assets/8c66e80c-3bf5-4f33-bd76-89d00dc004f9)
+
 shiva - It is a decentralized messaging method with the ability to be either completely P2P or not.
 # Information 
 shiva - The service is intended and developed with the aim of doing the impossible: giving the user absolute freedom of action and opportunity and leaving the user with his personal and inviolable anonymity and security. The service is partially decentralized, what does this mean?
