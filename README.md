@@ -16,6 +16,7 @@ Absolute P2P:
 In this mode, you have two options how you can connect:
 1. Be an initiating client
 2. Be a listening client.
+
 Since you are connecting P2P, this means that you are not connecting to servers, you are connecting directly to the interlocutor, but in absolute P2P mode, you do not have the opportunity to conveniently find out the IP, PORT of the connection inside the application, so you will have to connect knowing the data in advance.
 # install
 1. 
