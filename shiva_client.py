@@ -17,12 +17,18 @@ def start_menu():
     menu = input("[*] Введите: ")
     if menu == "1":
         start_anon()
-    if menu == "2":
+    elif menu == "2":
         start_client()
-    if menu == "3":
+    elif menu == "3":
         start_i2p()
+    elif menu == "4":
+        start_sett()
+    else:
+        print("[!] Вы выбрали неверную комманду. Введите порядковое число комады(например 1, для клиента слушателя)")
+        time.sleep(5)
+        start_menu
 def start_client():
-    host = '127.0.0.1'
+    host = "127.0.0.1"
     port = 12345
 
     ## Создание сокета
@@ -46,6 +52,10 @@ def start_client():
             ## Получение списка пользователей
             print("Список подключений:")
             print("[1] name: apskd\n[2] name: osd\n[3] name: opefw\n[4] Ввести name вручную.")
+            data_adres = client_socket.recv(1024)
+            if not data_adres:
+                print("[!] В данным момент подключений нет. Найдите пользователя сами.")
+            print(data_adres.decode)
             message = input("\nВведите сообщение (или 'quit' для выхода): ")
 
             if message.lower() == 'quit':
@@ -64,6 +74,9 @@ def start_client():
                     print("[!] В данном режиме вы являетесь инициатором, вам нужно подключиться к клиенту-слушателю.")
                     print("[!] Укажите ip клиента-слушателя: ")
                     connect_to_pl()
+                else:
+                    print("[!] Вы выбрали неверную комманду. Введите порядковое число комады(например 1, для клиента слушателя)")
+                    time.sleep(5)
     except socket.timeout:
         print("[TIMEOUT] Попытка подключения истекла. Запущен ли сервер?(server_error_1)")
         print("[!] Восстановление работы клиента...")
@@ -81,36 +94,58 @@ def start_client():
         ## Цикл связи
 def connect_to_pl():
     print("[!] Вы выбрали режим клиента-инициатора.")
-    pl_ip = input("")
-    pl_port = 80
+    print("[!] Введите прослушиваемый хост: ")
+    pl_ip = input("Введите: ")
+    print("[!] Введите прослушиваемый порт: ")
+    pl_port = input("Введите: ")
+    print("[!] Выполняется попытка подключения... ")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_pl:
         try:
-            socket_pl.connect((pl_ip, pl_port))
-            print("[!] Успешное подключение. Введите сообщение")
-            message_pl = input("")
-            socket_pl.send(message_pl.encode())
-            print("Введеное сообщение: ", message_pl, "Закодированная версия: ", message_pl.encode)
+            while socket_pl.connect((pl_ip, int(pl_port))):
+                try:
+                    pl_data = socket_pl.recv(1024)
+                    while not pl_data:
+                        try:
+                            print("[!] Сообщений нет")
+                        except:
+                            print("Новое сообщение: ", pl_data.decode)
+                    print("[!] Успешное подключение. Введите сообщение")
+                    message_pl = input("")
+                    socket_pl.send(message_pl.encode())
+                    print("Введеное сообщение: ", message_pl, "Закодированная версия: ", message_pl.encode)
+                except:
+                    print("[*] Ошибка подключения.")
         except Exception as e:
             print("[*] Ошибка.", e, "\n")
 def connect_list():
     print("[!] Вы выбрали режим клиента-слушателя")
-    list_port = 80
+    print("[!] Введите пролушиваемый хост: ")
+    list_host = input("[!] Введите: ")
+    print("[!] Введите прослушиваемый порт.")
+    list_port = input("Введите: ")
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as socket_lis:
-        print("[!] Выберите нужный вам порт: ")
-        print(" ")
-        socket_lis.bind(("0.0.0.0", list_port))
+        socket_lis.bind((list_host, int(list_port)))
         socket_lis.listen()
         print("[!] Клиент запущен как слушатель.Ожидается подключение...")
         while True:
             print("[!] Найдено подключение.")
             conn, addr = socket_lis.accept()
+            list_data = socket_lis.recv(1024)
+            while not list_data:
+                try:
+                    print("[!] Нет сообщений")
+                except:
+                    print("[!] Новое сообщение:", list_data.decode())
             data = conn.recv(1024)
             print("Получено сообщение: ", data.decode)
             conn.send(b"ask")
+# start i2p
 
 def start_i2p():
-    print("[!] Перед началои работы, стоит отметить что работа с сетью i2p неподготовленному пользовтелю может показаться сложной, перед началом работы прочитайте на странице git как им пользоваться.")
+    print("[!] Перед началом работы, стоит отметить что работа с сетью i2p неподготовленному пользовтелю может показаться сложной, перед началом работы прочитайте на странице git как им пользоваться.")
     print("[!] Вы выбрали режим i2p.")
+    
+# start anon
 def start_anon():
     print("[!] Вы выбрали режим абсолютной анонимномсти")
     print("Выберите каким клиентом вы являетесь: \n[1] Клиент-слушатель \n[2] Клиент-инициатор.")
@@ -123,9 +158,11 @@ def start_anon():
         print("[!] Вы выбрали неверную комманду. Введите порядковое число комады(например 1, для клиента слушателя)")
         time.sleep(5)
         start_anon()
-      
+def start_sett():
+    print("-----Settings.-----")
+    print(infsh.baner)
+    print("[1] Language")
         
-
-                                
+                              
 if __name__ == "__main__":
     start_menu()
